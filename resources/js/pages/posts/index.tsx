@@ -18,10 +18,11 @@ export default function PostsShow({ posts }: PostsIndexProps) {
         ) : (
           <div>
             {posts.map(post => (
-              <article key={post.id} className="border-b border-gray-200 pb-6 last:border-b-0">
+              <article key={post.id} className="border-b border-gray-200 py-6 last:border-b-0 last:pb-0 ">
                 <h2 className="text-xl font-semibold mb-2">
                   <Link href={`/posts/${post.id}`}>{post.title}</Link>
                 </h2>
+                <p className="text-sm text-grey-500 mb-2">By {post.user.name}</p>
                 <p className="text-gray-600">
                   {post.body.substring(0, 200)}
                   {post.body.length > 200 && "..."}
