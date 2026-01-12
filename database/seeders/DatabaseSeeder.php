@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Comment;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,19 +18,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $userTest = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('password'), // password: password
+        $users = User::factory(10)
+            ->has(Post::factory()->count(3))
+            ->create();
+
+        $posts = Post::all();
+
+        Comment::factory(100)->create([
+            'user_id' => fn() => $users->random()->id,
+            'post_id' => fn() => $posts->random()->id,
         ]);
-
-        $users = User::factory(9)->create();
-        $allUsers = $users->push($userTest);
-
-        Post::Factory(20)->create([
-            'user_id' => fn() => $allUsers->random()->id
-        ]);
-
-  
     }
 }

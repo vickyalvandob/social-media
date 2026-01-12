@@ -19,7 +19,7 @@ export default function PostsShow({ posts }: PostsIndexProps) {
         ) : (
           <div>
             {posts.map(post => (
-              <Card key={post.id} className="rounded-none border-b-0 last:border-b">
+              <Card key={post.id} className="rounded-none border-b-0 last:border-b last:rounded-b-xl first:rounded-t-xl">
                 <CardHeader>
                   <CardTitle>
                     <Link href={`/posts/${post.id}`}>{post.title}</Link>
