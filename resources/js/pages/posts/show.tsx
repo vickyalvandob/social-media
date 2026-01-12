@@ -2,14 +2,15 @@ import CommentCard from "@/components/comment-card";
 import CommentForm from "@/components/comment-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AppLayout from "@/layouts/app-layout";
-import { Post } from "@/types";
-import { Link } from "@inertiajs/react";
+import { Comment, Post } from "@/types";
+import { Deferred, Link } from "@inertiajs/react";
 
 interface PostsShowProps {
   post: Post;
+  comments: Comment[];
 }
 
-export default function PostsShow({ post }: PostsShowProps) {
+export default function PostsShow({ post, comments }: PostsShowProps) {
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -29,10 +30,17 @@ export default function PostsShow({ post }: PostsShowProps) {
 
         <CommentForm postId={post.id} />
 
-        <div className="space-y-4">
-          {post.comments && post.comments.length > 0 ? (
+        <Deferred data="comments"
+        fallback={
+          <div className="text-center py-8">
+            <p className="text-gray-500">Loading comments</p>
+          </div>
+        }
+        >
+          <div className="space-y-4">
+          {comments && comments.length > 0 ? (
             <div>
-              {post.comments.map((comment) => (
+              {comments.map((comment) => (
                 <CommentCard
                   key={comment.id}
                   comment={comment}
@@ -47,6 +55,7 @@ export default function PostsShow({ post }: PostsShowProps) {
             </div>
           )}
         </div>
+        </Deferred>
       </div>
     </AppLayout>
   );
