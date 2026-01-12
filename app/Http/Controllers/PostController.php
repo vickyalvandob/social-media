@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
@@ -33,7 +34,10 @@ class PostController extends Controller
             'body' => 'required|string|max:255'
         ]);
 
-        Post::create($validated);
+        Post::create([
+            ...$validated,
+            'user_id' => User::inRandomOrder()->first()->id
+        ]);
 
         return redirect('/posts');
     }
