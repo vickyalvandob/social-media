@@ -5,6 +5,7 @@ import AppLayout from "@/layouts/app-layout";
 import { Comment, Post } from "@/types";
 import { Deferred, Link } from "@inertiajs/react";
 import { useRef } from "react";
+import { toast } from "sonner";
 
 interface PostsShowProps {
   post: Post;
@@ -14,12 +15,18 @@ interface PostsShowProps {
 export default function PostsShow({ post, comments }: PostsShowProps) {
   const commentsSectionRef = useRef<HTMLDivElement>(null);
 
-  const handleCommentAdded = () => setTimeout(() => {
-    commentsSectionRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
+  const handleCommentAdded = () => {
+    toast("Comment has added", {
+      description: "Your comment is already live and visible"
     })
-  }, 300)
+    setTimeout(() => {
+      commentsSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 300)
+  }
+
 
   return (
     <AppLayout>

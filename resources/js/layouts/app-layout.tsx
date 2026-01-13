@@ -1,5 +1,6 @@
 import AppHeader from "@/components/app-header";
 import { ReactNode } from "react";
+import { Toaster } from "sonner";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <main className="max-w-4xl mx-auto px-4 py-8">
           {children}
       </main>
+      <Toaster />
     </div>
   );
 }
