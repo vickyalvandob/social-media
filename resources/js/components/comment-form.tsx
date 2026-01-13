@@ -7,9 +7,10 @@ import { Button } from "./ui/button";
 
 interface CommentFormProps {
   postId: number;
+  onCommentAdded?: () => void;
 }
 
-export default function CommentForm({postId}: CommentFormProps) {
+export default function CommentForm({postId, onCommentAdded}: CommentFormProps) {
   return (
     <Card>
       <CardHeader>
@@ -26,6 +27,7 @@ export default function CommentForm({postId}: CommentFormProps) {
         method="post" 
         className="space-y-4"
         resetOnSuccess
+        onSuccess={() => onCommentAdded?.()}
         >
         {({errors, processing}) => (
           <>
