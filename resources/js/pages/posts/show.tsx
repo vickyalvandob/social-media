@@ -1,10 +1,11 @@
 import CommentCard from "@/components/comment-card";
 import CommentForm from "@/components/comment-form";
+import CommentList from "@/components/comment-list";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AppLayout from "@/layouts/app-layout";
 import { Comment, Post } from "@/types";
-import { Deferred, Link } from "@inertiajs/react";
-import { useRef } from "react";
+import { Deferred, Link, usePoll } from "@inertiajs/react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 interface PostsShowProps {
@@ -14,17 +15,56 @@ interface PostsShowProps {
 
 export default function PostsShow({ post, comments }: PostsShowProps) {
   const commentsSectionRef = useRef<HTMLDivElement>(null);
+  
+  const commentCountRef = useRef(comments?.length ?? 0);
+  const iAmWritingComment = useRef(false);
 
-  const handleCommentAdded = () => {
-    toast("Comment has added", {
-      description: "Your comment is already live and visible"
-    })
-    setTimeout(() => {
+  const scrollToComments = () => 
       commentsSectionRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
-    }, 300)
+
+  usePoll(3_000, {
+    only: ["comments"],
+  });
+
+useEffect(() => {
+  const newCommentCount = comments?.length ?? 0;
+
+  // comment baru dari orang lain
+  if (
+    newCommentCount > commentCountRef.current &&
+    commentCountRef.current > 0 &&
+    !iAmWritingComment.current
+  ) {
+    toast("New comments available", {
+      duration: 6_000,
+      action: {
+        label: "View Comments",
+        onClick: scrollToComments,
+      },
+    });
+  }
+
+  // reset flag HANYA jika ini hasil comment kita sendiri
+  if (
+    iAmWritingComment.current &&
+    newCommentCount > commentCountRef.current
+  ) {
+    iAmWritingComment.current = false;
+  }
+
+  commentCountRef.current = newCommentCount;
+}, [comments]);
+
+
+  const handleCommentAdded = () => {
+    iAmWritingComment.current = true;
+    toast("Comment has added", {
+      description: "Your comment is already live and visible"
+    })
+   
   }
 
 
@@ -53,30 +93,9 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
         <div ref={commentsSectionRef}>
           <Deferred 
             data="comments"
-            fallback={
-              <div className="text-center py-8">
-                <p className="text-gray-500">Loading comments</p>
-              </div>
-            }
+            fallback={<CommentList comments={comments} />}
             >
-            <div className="space-y-4">
-              {comments && comments.length > 0 ? (
-                <div>
-                  {comments.map((comment) => (
-                    <CommentCard
-                      key={comment.id}
-                      comment={comment}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">
-                    No comments yet.
-                  </p>
-                </div>
-              )}
-            </div>
+              <CommentList comments={comments} />
           </Deferred>
         </div>
       </div>
