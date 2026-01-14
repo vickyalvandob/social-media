@@ -44,3 +44,8 @@ export interface PostLikeData {
   count:number;
   user_has_liked:boolean;
 }
+
+export interface PageProps {
+  user: User | null;
+  [key: string]: any;
+}
