@@ -52,7 +52,7 @@ class PostController extends Controller
 
         Post::create([
             ...$validated,
-            'user_id' => User::inRandomOrder()->first()->id
+            'user_id' => $request->user()
         ]);
 
         return redirect('/posts');
