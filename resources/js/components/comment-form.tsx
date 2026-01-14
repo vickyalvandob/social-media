@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { InputError } from "./input-error";
 import { Button } from "./ui/button";
+import { store } from "@/actions/App/Http/Controllers/CommentController";
 
 interface CommentFormProps {
   postId: number;
@@ -23,8 +24,7 @@ export default function CommentForm({postId, onCommentAdded}: CommentFormProps) 
       </CardHeader>
       <CardContent>
         <Form 
-        action="/comments" 
-        method="post" 
+        action={store()}
         className="space-y-4"
         resetOnSuccess
         onSuccess={() => onCommentAdded?.()}

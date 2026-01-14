@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import AppLayout from "@/layouts/app-layout";
 import { Post } from "@/types";
 import { Link } from "@inertiajs/react";
+import { Heart } from "lucide-react";
 
 interface PostsIndexProps {
   posts: Post[];
@@ -28,9 +29,17 @@ export default function PostsShow({ posts }: PostsIndexProps) {
                     By {post.user.name}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  {post.body.substring(0, 200)}
-                  {post.body.length > 200 && "..."}
+                <CardContent className="space-y-4">
+                  <p>
+                    {post.body.substring(0, 200)}
+                    {post.body.length > 200 && "..."}
+                  </p>
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <Heart size={16} className="text-gray-400" />
+                    <span>
+                      {post.likes_count ?? 0} likes
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             ))}

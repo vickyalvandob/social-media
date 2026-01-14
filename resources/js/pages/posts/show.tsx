@@ -1,19 +1,21 @@
 import CommentCard from "@/components/comment-card";
 import CommentForm from "@/components/comment-form";
 import CommentList from "@/components/comment-list";
+import LikeButton from "@/components/like-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AppLayout from "@/layouts/app-layout";
-import { Comment, Post } from "@/types";
+import { Comment, Post, PostLikeData } from "@/types";
 import { Deferred, Link, usePoll } from "@inertiajs/react";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 interface PostsShowProps {
   post: Post;
-  comments?: Comment[]
+  comments?: Comment[];
+  likes: PostLikeData;
 }
 
-export default function PostsShow({ post, comments }: PostsShowProps) {
+export default function PostsShow({ post, comments, likes }: PostsShowProps) {
   const commentsSectionRef = useRef<HTMLDivElement>(null);
   
   const commentCountRef = useRef(comments?.length ?? 0);
@@ -26,7 +28,7 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
       });
 
   usePoll(3_000, {
-    only: ["comments"],
+    only: ["comments", "likes"],
   });
 
 useEffect(() => {
@@ -80,8 +82,27 @@ useEffect(() => {
               By {post.user?.name} on {" "} {new Date(post.created_at).toLocaleDateString()}
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 whitespace-pre-wrap">{post.body}</p>
+          <CardContent className="space-y-4">
+            <p className="text-gray-700 whitespace-pre-wrap">
+              {post.body}
+            </p>
+            <Deferred 
+              data="likes"
+              fallback={
+              <LikeButton 
+                postId={post.id} 
+                count={likes?.count} 
+                liked={likes?.user_has_liked}
+                isLoading={!likes}
+              />
+              }
+            >
+              <LikeButton 
+                postId={post.id} 
+                count={likes?.count} 
+                liked={likes?.user_has_liked}
+              />
+            </Deferred>
           </CardContent>
         </Card>
 
